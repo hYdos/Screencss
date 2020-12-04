@@ -82,11 +82,11 @@ public class RealCssParser {
 		//apply margin -> border -> padding -> object
 		CssElement dummyElement = new CssElement(selector, CssElement.BODY);
 		int x = context.placementX + dummyElement.width;
-		ButtonWidget button = new ButtonWidget(x, context.placementY, 200, 20, label, btn -> System.out.println("Not Implemented!"));
+		ButtonWidget button = new ButtonWidget(x, context.placementY, dummyElement.width, dummyElement.height, label, btn -> System.out.println("Not Implemented!"));
 		context.placementX = context.placementX + dummyElement.width;
 
-		if (context.placementX + (dummyElement.width * 2) > this.screenWidth - CssElement.BODY.margin) {
-			context.placementX = -200 + CssElement.BODY.margin;
+		if (context.placementX + (dummyElement.width * 2) > this.screenWidth - CssElement.BODY.marginLeft + dummyElement.marginRight) {
+			context.placementX = -200 + CssElement.BODY.marginLeft;
 			context.placementY = context.placementY + dummyElement.height;
 		}
 		return button;

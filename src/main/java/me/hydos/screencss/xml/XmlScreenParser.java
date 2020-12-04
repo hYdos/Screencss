@@ -42,13 +42,13 @@ public class XmlScreenParser {
 			Node node = nodeList.item(i);
 			if (node.getNodeType() == Node.ELEMENT_NODE) {
 				Element element = (Element) node;
-				CssSelector selector = CssSelector.of(".", ifNull(element.getAttribute("class"), ""));
+				CssSelector selector = CssSelector.of(".", emptyIfNull(element.getAttribute("class")));
 				this.buttons.add(cssParser.createButtonElement(context, new LiteralText(element.getTextContent()), selector));
 			}
 		}
 	}
 
-	private String ifNull(String object, String ifNull) {
-		return object == null ? ifNull : object;
+	private String emptyIfNull(String object) {
+		return object == null ? "" : object;
 	}
 }

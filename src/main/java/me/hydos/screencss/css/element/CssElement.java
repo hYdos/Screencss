@@ -3,12 +3,15 @@ package me.hydos.screencss.css.element;
 import me.hydos.screencss.misc.CssSelector;
 
 public class CssElement {
-	public static final CssElement BODY = new CssElement(8, 0, 0, 0, 0, 0, 0, 0, 0);
+	public static final CssElement BODY = new CssElement(4, 4, 4, 4, 0, 0, 0, 0, 0, 0, 0, 0, -1, -1);
 
 	private final CssSelector cssSelector;
 	private final CssElement parent;
 
-	public int margin = 0;
+	public int marginTop = 3;
+	public int marginBottom = 3;
+	public int marginLeft = 3;
+	public int marginRight = 3;
 
 	public int borderTop = 3;
 	public int borderBottom = 3;
@@ -32,9 +35,12 @@ public class CssElement {
 		}
 	}
 
-	public CssElement(int margin, int borderTop, int borderBottom, int borderLeft, int borderRight, int paddingTop, int paddingBottom, int paddingLeft, int paddingRight) {
+	public CssElement(int marginTop, int marginBottom, int marginLeft, int marginRight, int borderTop, int borderBottom, int borderLeft, int borderRight, int paddingTop, int paddingBottom, int paddingLeft, int paddingRight, int width, int height) {
 		this();
-		this.margin = margin;
+		this.marginTop = marginTop;
+		this.marginBottom = marginBottom;
+		this.marginLeft = marginLeft;
+		this.marginRight = marginRight;
 		this.borderTop = borderTop;
 		this.borderBottom = borderBottom;
 		this.borderLeft = borderLeft;
@@ -43,6 +49,8 @@ public class CssElement {
 		this.paddingBottom = paddingBottom;
 		this.paddingLeft = paddingLeft;
 		this.paddingRight = paddingRight;
+		this.width = width;
+		this.height = height;
 	}
 
 	public CssElement() {
