@@ -12,6 +12,10 @@ public class CssSelector {
 		return selector;
 	}
 
+	public static CssSelector empty() {
+		return of(null, "");
+	}
+
 	@Override
 	public String toString() {
 		return type + name;

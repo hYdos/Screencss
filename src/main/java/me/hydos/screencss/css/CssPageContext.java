@@ -1,14 +1,11 @@
 package me.hydos.screencss.css;
 
+import me.hydos.screencss.css.element.CssElement;
+
 /**
  * used for storing variables stored across a whole css page instance
  */
 public class CssPageContext {
-	public int bodyMargin = 8;
-
-	public int defaultPadding = 8;
-	public int defaultBorder = 3;
-
-	public int placementX = -200 + bodyMargin;
-	public int placementY = bodyMargin;
+	public int placementX = -200 + CssElement.BODY.margin;
+	public int placementY = CssElement.BODY.margin;
 }
