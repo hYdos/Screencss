@@ -44,11 +44,9 @@ public class CSSScreen extends Screen {
 	@Override
 	public void init(MinecraftClient client, int width, int height) {
 		super.init(client, width, height);
-		xmlParser.parse(width);
-		this.buttons = xmlParser.getButtons();
 		cssParser = new RealCssParser(this.width, this.height, stylesheet);
-		CSSSEvents.WINDOW_RESIZED.register(client2 -> cssParser.onScreenResize(client.currentScreen.width, client.currentScreen.height));
-		cssParser.calculatePositions();
+		xmlParser.parse(cssParser);
+		this.buttons = xmlParser.getButtons();
 	}
 
 	@Override

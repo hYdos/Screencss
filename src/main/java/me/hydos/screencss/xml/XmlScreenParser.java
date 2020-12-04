@@ -1,7 +1,9 @@
 package me.hydos.screencss.xml;
 
+import me.hydos.screencss.css.CssPageContext;
+import me.hydos.screencss.css.RealCssParser;
+import me.hydos.screencss.misc.CssSelector;
 import net.minecraft.client.gui.widget.AbstractButtonWidget;
-import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.text.LiteralText;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -31,29 +33,22 @@ public class XmlScreenParser {
 		return buttons;
 	}
 
-	public void parse(int screenWidth) {
+	public void parse(RealCssParser cssParser) {
 		document.getDocumentElement().normalize();
 		NodeList nodeList = document.getElementsByTagName("button");
-		int defaultButtonWidth = 200;
-		int defaultButtonHeight = 20;
 
-		int placementX = -200;
-		int placementY = 0;
+		CssPageContext context = new CssPageContext();
 		for (int i = 0; i < nodeList.getLength(); i++) {
 			Node node = nodeList.item(i);
 			if (node.getNodeType() == Node.ELEMENT_NODE) {
 				Element element = (Element) node;
-				int x = placementX + defaultButtonWidth;
-				this.buttons.add(new ButtonWidget(x, placementY, 200, 20, new LiteralText(element.getTextContent()), button -> {
-					System.out.println("Not Implemented!");
-				}));
-				placementX = placementX + defaultButtonWidth;
-
-				if(placementX + (defaultButtonWidth * 2) > screenWidth){
-					placementX = -200;
-					placementY = placementY + defaultButtonHeight;
-				}
+				CssSelector selector = CssSelector.of(".", ifNull(element.getAttribute("class"), ""));
+				this.buttons.add(cssParser.createButtonElement(context, new LiteralText(element.getTextContent()), selector));
 			}
 		}
+	}
+
+	private String ifNull(String object, String ifNull) {
+		return object == null ? ifNull : object;
 	}
 }
