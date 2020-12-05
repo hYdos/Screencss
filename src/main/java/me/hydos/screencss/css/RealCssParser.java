@@ -1,5 +1,6 @@
 package me.hydos.screencss.css;
 
+import me.hydos.screencss.Screencss;
 import me.hydos.screencss.css.element.CssElement;
 import me.hydos.screencss.misc.CSSScreen;
 import me.hydos.screencss.misc.CssMath;
@@ -78,17 +79,61 @@ public class RealCssParser {
 		}
 	}
 
-	public AbstractButtonWidget createButtonElement(CssPageContext context, LiteralText label, CssSelector selector) {
-		//apply margin -> border -> padding -> object
+	/**
+	 * current method for adding objects to the page
+	 *
+	 * @param ctx      the css page context
+	 * @param label    the label of the button
+	 * @param selector the cssSelector
+	 * @return the button with css applied
+	 * @implNote apply order is: margin -> border -> padding -> object
+	 */
+	public AbstractButtonWidget createButtonElement(CssPageContext ctx, LiteralText label, CssSelector selector) {
 		CssElement dummyElement = new CssElement(selector, CssElement.BODY);
-		int x = context.placementX + dummyElement.width;
-		ButtonWidget button = new ButtonWidget(x, context.placementY, dummyElement.width, dummyElement.height, label, btn -> System.out.println("Not Implemented!"));
-		context.placementX = context.placementX + dummyElement.width;
+		addPreRenderDisplacements(ctx, dummyElement);
+		ButtonWidget button = new ButtonWidget(ctx.placementX, ctx.placementY, dummyElement.width, dummyElement.height, label, btn -> System.out.println("Not Implemented!"));
+		addPostRenderDisplacements(ctx, dummyElement);
 
-		if (context.placementX + (dummyElement.width * 2) > this.screenWidth - CssElement.BODY.marginLeft + dummyElement.marginRight) {
-			context.placementX = -200 + CssElement.BODY.marginLeft;
-			context.placementY = context.placementY + dummyElement.height;
+		ctx.pageElements.forEach(element -> {
+			if(dummyElement.isCollidingOnY(element)){
+				System.out.println("COLLISION ON Y between " + label.getRawString() + " and smth else idk");
+			}
+		});
+
+		//Handle where to place next element
+		if (ctx.placementX + (dummyElement.width * 2) > this.screenWidth - CssElement.BODY.marginLeft + dummyElement.marginRight) {
+			ctx.placementX = -200 + CssElement.BODY.marginLeft;
+			ctx.placementY = ctx.placementY + dummyElement.height;
 		}
+		ctx.pageElements.add(dummyElement);
 		return button;
+	}
+
+	private void tryFixCollision(CssElement dummyElement, CssElement element, ButtonWidget button) {
+		button.y = button.y + element.marginBottom + dummyElement.borderBottom + dummyElement.paddingBottom;
+	}
+
+	/**
+	 * should add the right and bottom margins, borders and padding
+	 *
+	 * @param ctx     the css page context
+	 * @param element the element
+	 */
+	private void addPostRenderDisplacements(CssPageContext ctx, CssElement element) {
+		int oldPlacementX = ctx.placementX;
+		int oldPlacementY = ctx.placementY;
+		ctx.placementX = ctx.placementX + element.marginRight + element.borderRight + element.paddingRight;
+
+		element.setTotalBoundary(oldPlacementX, ctx.placementX, oldPlacementY - (element.height / 2), oldPlacementY + (element.height / 2));
+	}
+
+	/**
+	 * should add the left and top margins, borders and padding
+	 *
+	 * @param ctx     the css page context
+	 * @param element the element
+	 */
+	private void addPreRenderDisplacements(CssPageContext ctx, CssElement element) {
+		ctx.placementX = ctx.placementX + element.marginLeft + element.borderLeft + element.paddingLeft + element.width;
 	}
 }
